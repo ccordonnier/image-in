@@ -4,8 +4,9 @@ namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class HomeController{
+class HomeController extends AbstractController{
 	/**
 	 * [DisplayHome description]
 	 * @Route("/")
@@ -16,10 +17,11 @@ class HomeController{
 
 	/**
 	 * [showPicture description]
-	 * @Route("/picture/1")
+	 * @Route("/picture/{slug}")
 	 */
-	public function showPicture(){
-		return new Response("hello you're on the future picture page !");
+	public function showPicture($slug){
+		return $this->render("home/display.html.twig", [
+			'picture' => ucwords(str_replace('-',' ',$slug))]);
 
 	}
 

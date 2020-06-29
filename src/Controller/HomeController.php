@@ -20,6 +20,7 @@ class HomeController extends AbstractController{
 	 * @Route("/picture/{slug}")
 	 */
 	public function showPicture($slug){
+		/*dump($slug);*/
 		return $this->render("home/display.html.twig", [
 			'picture' => ucwords(str_replace('-',' ',$slug))]);
 

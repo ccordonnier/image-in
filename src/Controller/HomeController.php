@@ -21,7 +21,7 @@ class HomeController extends AbstractController{
 	}
 
 	/**
-	 * [DisplayHome description]
+	 * [displayHome description]
 	 * @Route("/", name="home")
 	 */
 	public function displayHome(){

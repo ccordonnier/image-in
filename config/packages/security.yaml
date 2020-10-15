@@ -19,14 +19,17 @@ security:
             anonymous: true
             lazy: true
             form_login:
-                check_path: login
-                login_path: login
+                check_path: security_login
+                login_path: security_login
                 username_parameter: log-email
                 password_parameter: log-password
             logout:
                 path: /logout
                 target: /
             #provider: users_in_memory
+            #guard: 
+            #    authenticators:
+            #        - App\Security\TokenAuthenticator
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -39,4 +42,4 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/profile, roles: ROLE_USER }

@@ -32,7 +32,7 @@
             </div>
             <div id="connexion" class="col s12">
               <div class="row">
-                <form class="col s12" action="{{ path('login') }}" method="post">
+                <form class="col s12" action="{{ path('security_login') }}" method="post">
                   <div class="row">
                     {% if error %}
                     <div class="card-panel red lighten-3">{{ error.messageKey }}</div>

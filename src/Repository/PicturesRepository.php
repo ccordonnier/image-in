@@ -22,19 +22,19 @@ class PicturesRepository extends ServiceEntityRepository
     // /**
     //  * @return Pictures[] Returns an array of Pictures objects
     //  */
-    /*
-    public function findByExampleField($value)
+    
+    public function findByField($field,$value,$maxvalue=10)
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
+        return $this->createQueryBuilder('pictures')
+            ->andWhere('pictures.'.$field.' = :val')
             ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
+            ->orderBy('pictures.id', 'ASC')
+            ->setMaxResults($maxvalue)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
+    
 
     /*
     public function findOneBySomeField($value): ?Pictures

@@ -26,7 +26,7 @@ class HomeController extends AbstractController{
 	 */
 	public function displayHome(){
 		$pictures = $this->repository->findAll();
-		dump($pictures);
+		//dump($pictures);
 		return $this->render("home/show.html.twig", compact('pictures'));
 	}
 

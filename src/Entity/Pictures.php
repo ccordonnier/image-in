@@ -63,6 +63,12 @@ class Pictures
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="integer")
+     * 
+     */
+    private $user_id;
+
     public function getId(): ?int
     {
         return $this->id;

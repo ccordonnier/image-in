@@ -30,6 +30,8 @@ class User implements UserInterface,\Serializable
     /**
      * @Assert\NotBlank()
      * @Assert\Length(max=4096)
+     * @Assert\Length(min=6, minMessage="Le champ username doit avoir au moins 6 caractères")
+     * @Assert\Unique(message="Le nom d'utilisateur est déjà utilisé")
      */
     //private $plainPassword;
     /**
@@ -44,6 +46,7 @@ class User implements UserInterface,\Serializable
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Unique(message="Le mail est déjà utilisé")
      */
     private $email;
     
@@ -52,6 +55,11 @@ class User implements UserInterface,\Serializable
      * @ORM\OneToMany(targetEntity=Pictures::class, mappedBy="user", orphanRemoval=true)
      */
     private $Pictures;
+
+    /**
+     * @ORM\Column(type="string", length=255, unique=true,  nullable=true)
+     */
+    private $apiToken;
 
     public function __construct()
     {
@@ -211,6 +219,18 @@ class User implements UserInterface,\Serializable
                 $picture->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getApiToken(): ?string
+    {
+        return $this->apiToken;
+    }
+
+    public function setApiToken(?string $apiToken): self
+    {
+        $this->apiToken = $apiToken;
 
         return $this;
     }

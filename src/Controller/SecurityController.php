@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+
+
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,11 +33,16 @@ class SecurityController extends AbstractController{
 
 	/**
 	 * [login description]
-	 * @Route("/login", name="login")
+	 * @Route("/login", name="security_login")
 	 * @return [type] [description]
 	 */
-	public function login(AuthenticationUtils $authenticationUtils){
-		//dd($authenticationUtils);
+	public function login(Request $request, AuthenticationUtils $authenticationUtils){
+		$user = new User();
+		$form = $this->createForm(UserType::class, $user);
+		if ($form->isSubmitted() && $form->isValid()) {
+
+		}
+
 		$error = $authenticationUtils->getLastAuthenticationError();
 		$lastUsername = $authenticationUtils->getLastUsername();
 		$formSign = $this->createForm(UserType::class);
@@ -81,6 +88,7 @@ class SecurityController extends AbstractController{
 			}
 			
 		}
+		
 
 		return $this->redirectToRoute('home');
 		//dd($form);

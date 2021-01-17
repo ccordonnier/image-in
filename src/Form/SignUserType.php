@@ -14,8 +14,7 @@ class SignUserType extends AbstractType
         $builder
             ->add('username')
             ->add('password')
-            ->add('email')
-        ;
+            ->add('email');
     }
 
     public function configureOptions(OptionsResolver $resolver)

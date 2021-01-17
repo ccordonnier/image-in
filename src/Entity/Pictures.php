@@ -28,19 +28,9 @@ class Pictures
     private $date;
 
     /**
-     * @ORM\Column(type="string", length=50)
-     */
-    private $orientation;
-
-    /**
      * @ORM\Column(type="integer")
      */
-    private $height;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $width;
+    private $size;
 
     /**
      * @ORM\Column(type="integer")
@@ -98,26 +88,14 @@ class Pictures
         return $this;
     }
 
-    public function getOrientation(): ?string
+    public function getSize(): ?int
     {
-        return $this->orientation;
+        return $this->size;
     }
 
-    public function setOrientation(string $orientation): self
+    public function setSize(int $size): self
     {
-        $this->orientation = $orientation;
-
-        return $this;
-    }
-
-    public function getHeight(): ?int
-    {
-        return $this->height;
-    }
-
-    public function setHeight(int $height): self
-    {
-        $this->height = $height;
+        $this->size = $size;
 
         return $this;
     }

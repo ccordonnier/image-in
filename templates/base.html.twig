@@ -10,6 +10,19 @@
             display:block!important;
           }
         </style>
+        <style type="text/css">
+	.jaimes {
+    position: absolute;
+    bottom: -38px;
+    right: 40px;
+    color: black;
+    font-size: 11px;
+}
+
+	.card-image .material-icons.border{
+		color: rgba(0,0,0,0.87);
+	}
+</style>
         {% block stylesheets %}
         	
         {% endblock %}
@@ -22,11 +35,12 @@
               <a href="#" class="brand-logo">Image-in</a>
               <!--<a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>-->
               <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="{{path('home')}}">Home</a></li>
+                <li><a href="{{path('home')}}">Accueil</a></li>
                 {% if app.user == null %}
-                  <li><a href="{{path('security_login')}}">Login</a></li>
+                  <li><a href="{{path('security_login')}}">Connexion</a></li>
+                {% else %}
+                  <li><a class="sidenav-trigger" href="#!" data-target="slide-out"><i class="material-icons right">person</i></a></li>
                 {% endif %}
-                <li><a class="sidenav-trigger" href="#!" data-target="slide-out"><i class="material-icons right">person</i></a></li>
               </ul>
             </div>
           </nav>
@@ -36,23 +50,25 @@
               <li>
                 <div class="user-view">
                   <div class="background">
-                    <img src="images/office.jpg">
+                    <img src="{{asset('images/office.jpg')}}">
                   </div>
-                  <a href="#user"><img class="circle" src="images/office.jpg"></a>
-                  <a href="#name"><span class="white-text name">{{ app.user.username }}</span></a>
-                  <a href="#email"><span class="white-text email">{{ app.user.email }}</span></a>
+                  <img class="circle" src="{{asset('images/office.jpg')}}">
+                  <span class="white-text name">{{ app.user.username }}</span>
+                  <span class="white-text email">{{ app.user.email }}</span>
                 </div>
               </li>
-              <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
+              <li><a href="#" class="waves-effect"><i class="material-icons">account_box</i>Mes informations</a></li>
+              <li><a href="{{path('profil_pictures')}}" class="waves-effect"><i class="material-icons">collections</i>Mes images</a></li>
+
               <li><a href="#!">Second Link</a></li>
               <li><div class="divider"></div></li>
               <li><a class="subheader">Subheader</a></li>
-              <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+              <li><a  href="#!">Third Link With Waves</a></li>
             {% endif %}
           </ul>
           
         </div>
-        <div class="nav-background valign-wrapper" style="background-image: url(images/header1.jpg);height: 85vh;background-size: 100vw">
+        <div class="nav-background valign-wrapper" style="background-image: url({{asset('images/header1.jpg')}});height: 85vh;background-size: 100vw">
     		  <div class="nav-header container">
   			   <h1 style="color: white;">Ce que la photo reproduit à l'infini n'a lieu qu'une fois.</h1>
   		    </div>

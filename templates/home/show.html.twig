@@ -1,19 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
-<style type="text/css">
-	.jaimes {
-    position: absolute;
-    bottom: -60px;
-    right: 0;
-    padding: 20px;
-    color: black;
-    font-size: 11px;
-}
 
-	.card-image .material-icons.border{
-		color: rgba(0,0,0,0.87);
-	}
-</style>
 {% endblock %}
 {% block body %}
 <div class="container">
@@ -27,7 +14,7 @@
           							<img src="images/{{ picture.name }}">
           							
           							<a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons ">favorite</i></a>
-                        <span class="jaimes">{{ picture.likes }} j'aimes</span>
+                        <span class="jaimes">{{ picture.likes }}</span>
         						</div>
         						<div class="card-content">
 	          						<span class="card-title">{{ picture.title }}</span>

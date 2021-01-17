@@ -11,12 +11,19 @@
   					<div class="row">
     					<div class="col s12 m12">
                             <div class="card">
-                                <div class="card-image waves-effect waves-block waves-light">
-                                    <img class="activator" src="{{ asset('images/' ~ picture.name ) }}">
+                                <div class="card-image">
+                                    <img class="" src="{{ asset('images/' ~ picture.name ) }}">
+									<a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons ">favorite</i></a>
+                        			<span class="jaimes">{{ picture.likes }}</span>
                                 </div>
                                 <div class="card-content">
                                     <span class="card-title activator grey-text text-darken-4">{{ picture.name }}</span>
-                                    <p><a href="#"><i class="material-icons">visibility</i></a><a href="#"><i class="material-icons">file_download</i></a><a href="#"><i class="material-icons">edit</i></a><a href="#"><i class="material-icons">delete</i></a></p>
+                                    <p>
+										<a href="#"><i class="material-icons">visibility</i></a>
+										<a href="#"><i class="material-icons">file_download</i></a>
+										<a href="{{ path('profil_pictures_edit', {'id' : picture.id} ) }}"><i class="material-icons">edit</i></a>
+										<a href="#"><i class="material-icons">delete</i></a>
+									</p>
                                 </div>
                             </div>
     					</div>

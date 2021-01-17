@@ -3,9 +3,29 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container">
-        {{ form(formPicture) }}
+<div class="container">
+    {% if picture is defined %}
+    <h1>Modification de l'image : {{picture.title}}</h1>
+    {% else %}
+    <h1>Ajout d'une image</h1>
+    {% endif %}
+    <div class="row">
+        {% if picture is defined %}
+        <div class="col m4 s12">
+            <img class="responsive-img" src="{{asset('images/users/'~ app.user.id ~'/'~ picture.name) }}" alt="">
+        </div>
+        <div class="col m8 s12">
+            {{ form(formPicture) }}
+        </div>
+        {% else %}
+        <div class="col s12">
+            {{ form(formPicture) }}
+        </div>
+        {% endif %}
+
     </div>
+
+</div>
 {% endblock %}
 
 {% block javascripts %}

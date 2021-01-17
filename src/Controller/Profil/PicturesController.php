@@ -14,10 +14,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class PicturesController extends AbstractController
 {
@@ -74,6 +76,7 @@ class PicturesController extends AbstractController
 
 		return $this->render('profil/pictures/edit.html.twig', [
 			//'error' => $error,
+			'picture' => $picture,
 			'formPicture' => $form->createView()
 		]);
 	}
@@ -83,12 +86,12 @@ class PicturesController extends AbstractController
 	 * @Route("/profil/pictures/add", name="profil_pictures_add")
 	 * @return [type] [description]
 	 */
-	public function add(Request $request)
+	public function add(Request $request, SluggerInterface $slugger)
 	{
 
 		//$picture = new Pictures();
 		$picture = new Pictures;
-
+		$user = $this->security->getUser();
 
 
 		$form = $this->createFormBuilder($picture)
@@ -99,7 +102,7 @@ class PicturesController extends AbstractController
 				]
 			])
 			->add("tag", TextType::class, [
-				"label" => "Etiquettes",
+				"label" => "Etiquettes ( séparées par un \";\" )",
 			])
 			->add("name", FileType::class, [
 				"label" => "Ajouter un fichier"
@@ -114,8 +117,36 @@ class PicturesController extends AbstractController
 		$form->handleRequest($request);
 		if ($request->isMethod('POST')) {
 			if ($form->isSubmitted() && $form->isValid()) {
-				$file = $request->files->get('file');
-				dd($request);
+
+				$file = $request->files->get('form')['name'];
+				//dd($file);
+				$basename = $file->getBasename();
+				$originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+
+				$size = $file->getSize();
+				$extension = $file->getExtension();
+
+				if ($file) {
+					$safeFilename = $slugger->slug($originalFilename);
+					$newFilename = $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
+					$fileDirectory = 'images/users/' . $user->getId();
+					try {
+						$file->move(
+							$fileDirectory,
+							$newFilename
+						);
+					} catch (FileException $e) {
+						// ... handle exception if something happens during file upload
+					}
+
+					$picture->setName($newFilename);
+				}
+
+
+				$picture->setSize($size);
+				$picture->setDate(new \DateTime());
+				$picture->setLikes(0);
+				$picture->setUser($user);
 
 				$entityManager = $this->getDoctrine()->getManager();
 				$entityManager->persist($picture);

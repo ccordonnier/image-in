@@ -52,7 +52,7 @@
                   <div class="background">
                     <img src="{{asset('images/office.jpg')}}">
                   </div>
-                  <img class="circle" src="{{asset('images/office.jpg')}}">
+                  <img class="circle" src="{{asset('images/users/'~ app.user.id ~ '/profil.jpg')}}">
                   <span class="white-text name">{{ app.user.username }}</span>
                   <span class="white-text email">{{ app.user.email }}</span>
                 </div>

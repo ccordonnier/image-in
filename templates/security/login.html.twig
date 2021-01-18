@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
 <style type="text/css">
-  .card-login .card-tabs{
+  .card-login .card-tabs {
     background-image: url(images/backgroundlogin.jpg);
     background-size: cover;
   }
-  .card-login h2{
+
+  .card-login h2 {
     color: white;
     text-align: center;
     width: 100%;
@@ -16,10 +17,23 @@
 
 
 <div class="container">
+
   <div class="section">
     <div class="row">
       <div class="col s10 offset-s1">
+        {% if not messageError is empty %}
+        <div class="row">
+          <div class="card-panel red darken-2">
+            <span class="white-text text-darken-2">
+              <strong>
+                {{ messageError }}
+              </strong>
+            </span>
+          </div>
+        </div>
+        {% endif %}
         <div class="row card card-login horizontal large">
+
           <div class="card-tabs col s5 valign-wrapper">
             <h2 class="center-align">Login</h2>
           </div>
@@ -46,7 +60,8 @@
                       <label for="log-password">Mot de passe</label>
                     </div>
                     <div class="input-field col s12">
-                      <input id="log-submit" name="log-submit" type="submit" class="btn waves-effect waves-light" value="se connecter">
+                      <input id="log-submit" name="log-submit" type="submit" class="btn waves-effect waves-light"
+                        value="se connecter">
                     </div>
                   </div>
                 </form>
@@ -54,36 +69,37 @@
             </div>
             <div id="inscription" class="col s12">
               <div class="row">
-                {{ form_start(formSign, {'method': 'POST', 'class':'col s12', 'action': path('signin')})  }}
+                {{ form_start(formSign, {'method': 'POST', 'class':'col s12', 'action': path('signin')}) }}
 
-                
-                  <div class="row">
-                    <div class="input-field col s12">
-                      <!--<input id="sign-email" type="email" name="_sign-email" class="validate">
+
+                <div class="row">
+                  <div class="input-field col s12">
+                    <!--<input id="sign-email" type="email" name="_sign-email" class="validate">
                       <label for="sign-email">Email</label>-->
-                      {{ form_row(formSign.email) }}
-                    </div>
-                    <div class="input-field col s12">
-                      <!--<input id="sign-username" type="text" name="_sign-username" class="validate">
-                      <label for="sign-username">Nom d'utilisateur</label>-->
-                      {{ form_row(formSign.username) }}
-                    </div>
-                    <div class="input-field col s12">
-                      <!--<input id="sign-password" type="password" name="_sign-password" class="validate">
-                      <label for="sign-password">Mot de passe</label>-->
-                      {{ form_row(formSign.password.first) }}
-                    </div>
-                    <div class="input-field col s12">
-                      <!--<input id="sign-confirm-password" type="password" name="_sign-confirm-password" class="validate">
-                      <label for="sign-confirm-password">Confirmer le mot de passe</label>-->
-                      {{ form_row(formSign.password.second) }}
-                    </div>
-                    <div class="input-field col s12">
-                      <input id="sign-submit" name="_sign-submit" type="submit" class="btn waves-effect waves-light" value="s'inscrire">    
-                    </div>
+                    {{ form_row(formSign.email) }}
                   </div>
-                  {{form_rest(formSign)}}
-                
+                  <div class="input-field col s12">
+                    <!--<input id="sign-username" type="text" name="_sign-username" class="validate">
+                      <label for="sign-username">Nom d'utilisateur</label>-->
+                    {{ form_row(formSign.username) }}
+                  </div>
+                  <div class="input-field col s12">
+                    <!--<input id="sign-password" type="password" name="_sign-password" class="validate">
+                      <label for="sign-password">Mot de passe</label>-->
+                    {{ form_row(formSign.password.first) }}
+                  </div>
+                  <div class="input-field col s12">
+                    <!--<input id="sign-confirm-password" type="password" name="_sign-confirm-password" class="validate">
+                      <label for="sign-confirm-password">Confirmer le mot de passe</label>-->
+                    {{ form_row(formSign.password.second) }}
+                  </div>
+                  <div class="input-field col s12">
+                    <input id="sign-submit" name="_sign-submit" type="submit" class="btn waves-effect waves-light"
+                      value="s'inscrire">
+                  </div>
+                </div>
+                {{form_rest(formSign)}}
+
                 {{ form_end(formSign) }}
               </div>
             </div>
@@ -99,8 +115,8 @@
 {% block javascripts %}
 <script type="text/javascript">
 
-    if ($('#tabs-login').length) {
-      $('#tabs-login').tabs({  });
-    }
+  if ($('#tabs-login').length) {
+    $('#tabs-login').tabs({});
+  }
 </script>
 {% endblock %}

@@ -6,6 +6,7 @@ namespace App\Controller\Profil;
 
 use App\Entity\Pictures;
 use App\Repository\UserRepository;
+use APP\Controller\SecurityController;
 //use App\Form
 
 use App\Repository\PicturesRepository;
@@ -19,6 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class PicturesController extends AbstractController
@@ -57,6 +59,17 @@ class PicturesController extends AbstractController
 	public function edit($id)
 	{
 		$picture = $this->repository->find($id);
+		$user = $this->security->getUser();
+		//dd($user);
+		$pictureUser = $picture->getUser();
+		if ($user == null) {
+			return $this->redirectToRoute('security_login', ['messageError' => 'Veuillez vous connecter pour modifier une image']);
+		} else {
+			if ($pictureUser->getId() != $user->getId()) {
+				return $this->redirectToRoute('profil_pictures', ['error' => 'Vous ne pouvez pas modifier cette image']);
+			}
+		}
+
 		$form = $this->createFormBuilder($picture)
 			->add("title", TextType::class, [
 				"label" => "Titre de l'image",

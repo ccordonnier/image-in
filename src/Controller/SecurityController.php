@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Controller;
 
@@ -19,15 +19,17 @@ use App\Form\UserType;
 
 
 
-class SecurityController extends AbstractController{
+class SecurityController extends AbstractController
+{
 
 	/**
-	/* @var UserRepository
-	*/ 
+	 * @var UserRepository
+	 */
 	private $repository;
 
 
-	public function __construct(UserRepository $repository){
+	public function __construct(UserRepository $repository)
+	{
 		$this->repository = $repository;
 	}
 
@@ -36,17 +38,24 @@ class SecurityController extends AbstractController{
 	 * @Route("/login", name="security_login")
 	 * @return [type] [description]
 	 */
-	public function login(Request $request, AuthenticationUtils $authenticationUtils){
+	public function login(Request $request, AuthenticationUtils $authenticationUtils)
+	{
 		$user = new User();
+		$messageError = "";
 		$form = $this->createForm(UserType::class, $user);
-		if ($form->isSubmitted() && $form->isValid()) {
 
+		if ($form->isSubmitted() && $form->isValid()) {
 		}
 
 		$error = $authenticationUtils->getLastAuthenticationError();
 		$lastUsername = $authenticationUtils->getLastUsername();
 		$formSign = $this->createForm(UserType::class);
-		return $this->render('security/login.html.twig',[
+
+		if (isset($_GET['messageError']) && !empty($_GET['messageError'])) {
+			$messageError = $_GET['messageError'];
+		}
+		return $this->render('security/login.html.twig', [
+			'messageError' => $messageError,
 			'lastUsername' => $lastUsername,
 			'error' => $error,
 			'formSign' => $formSign->createView()
@@ -58,44 +67,42 @@ class SecurityController extends AbstractController{
 	 * @Route("/signin", name="signin")
 	 * @return [type] [description]
 	 */
-	public function signin(Request $request, UserPasswordEncoderInterface $passwordEncoder){
-		
+	public function signin(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+	{
+
 		$user = new User();
 		$form = $this->createForm(UserType::class, $user);
 		//dd($request->isMethod('POST'));
 		$form->handleRequest($request);
 		if ($request->isMethod('POST')) {
-			
-			
-			
+
+
+
 			if ($form->isSubmitted() && $form->isValid()) {
-				
+
 				//$user->set_username($form->)
 				//Encode the password
 				$password = $passwordEncoder->encodePassword($user, $user->getPassword());
 				$user->setPassword($password);
 				$user->setRoles(['ROLE_USER']);
-				
+
 				//save user
 				$entityManager = $this->getDoctrine()->getManager();
 				$entityManager->persist($user);
 				$entityManager->flush();
+			} else {
 
-			}else{
-				
 				dd($form->getErrors(true));
-
 			}
-			
 		}
-		
+
 
 		return $this->redirectToRoute('home');
 		//dd($form);
 		//$form->handleRequest($request);
 		//$form->submit($request->request->get($form->getName()));
-		
-		
-		
+
+
+
 	}
 }

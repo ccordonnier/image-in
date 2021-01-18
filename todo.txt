@@ -1,4 +1,6 @@
 #17 Janvier 2021
 
-// - ajouter l'image dans le ftp/dossier correspondant
-- Quand on arrive sur une page d'édition d'image, vérifier qu'elle corresponde bien à une image de l'utilisateur actuel
+// - ajouter l'image dans le ftp/dossier correspondant.
+// - Quand on arrive sur une page d'édition d'image, vérifier qu'elle corresponde bien à une image de l'utilisateur actuel.
+//   Ecrire le message d'erreur apres la redirection.
+- Sécurisation des formulaires d'ajout et d'édition d'image. ex: extensions autorisés pour l'image.

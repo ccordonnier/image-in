@@ -2,8 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\PicturesRepository;
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PicturesRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=PicturesRepository::class)
@@ -58,6 +61,16 @@ class Pictures
      * 
      */
     private $user_id;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PictureLike::class, mappedBy="picture")
+     */
+    private $pictureLikes;
+
+    public function __construct()
+    {
+        $this->pictureLikes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -158,5 +171,52 @@ class Pictures
         $this->user = $user;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|PictureLike[]
+     */
+    public function getPictureLikes(): Collection
+    {
+        return $this->pictureLikes;
+    }
+
+    public function addPictureLike(PictureLike $pictureLike): self
+    {
+        if (!$this->pictureLikes->contains($pictureLike)) {
+            $this->pictureLikes[] = $pictureLike;
+            $pictureLike->setPicture($this);
+        }
+
+        return $this;
+    }
+
+    public function removePictureLike(PictureLike $pictureLike): self
+    {
+        if ($this->pictureLikes->contains($pictureLike)) {
+            $this->pictureLikes->removeElement($pictureLike);
+            // set the owning side to null (unless already changed)
+            if ($pictureLike->getPicture() === $this) {
+                $pictureLike->setPicture(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Permet de vérifier si un user à liker une image
+     */
+    public function isLikedByUser(User $user)
+    {
+        //dump($this->pictureLikes);
+        //return $this->pictureLikes;
+        foreach ($this->pictureLikes as $like) {
+
+            if ($like->getUser() === $user) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -5,11 +5,14 @@ namespace App\Controller\Profil;
 
 
 use App\Entity\Pictures;
+use App\Entity\PictureLike;
 use App\Repository\UserRepository;
-use APP\Controller\SecurityController;
 //use App\Form
 
+use APP\Controller\SecurityController;
 use App\Repository\PicturesRepository;
+use Doctrine\Persistence\ObjectManager;
+use App\Repository\PictureLikeRepository;
 use App\Controller\Admin\PictureController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
@@ -19,8 +22,8 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class PicturesController extends AbstractController
@@ -60,7 +63,6 @@ class PicturesController extends AbstractController
 	{
 		$picture = $this->repository->find($id);
 		$user = $this->security->getUser();
-		//dd($user);
 		$pictureUser = $picture->getUser();
 		if ($user == null) {
 			return $this->redirectToRoute('security_login', ['messageError' => 'Veuillez vous connecter pour modifier une image']);
@@ -88,7 +90,6 @@ class PicturesController extends AbstractController
 
 
 		return $this->render('profil/pictures/edit.html.twig', [
-			//'error' => $error,
 			'picture' => $picture,
 			'formPicture' => $form->createView()
 		]);
@@ -172,5 +173,54 @@ class PicturesController extends AbstractController
 		return $this->render('profil/pictures/edit.html.twig', [
 			'formPicture' => $form->createView()
 		]);
+	}
+
+	/**
+	 * Permet de Liker ou unliker une image
+	 *
+	 * @Route("/picture/{id}/like", name="picture_like")
+	 * 
+	 * @param Pictures $picture
+	 * @param PictureLikeRepository $likeRepository
+	 * @return Response
+	 */
+	public function like(Pictures $picture, PictureLikeRepository $likeRepository): Response
+	{
+		$user = $this->getUser();
+		$entityManager = $this->getDoctrine()->getManager();
+		if (!$user) {
+			return $this->json(['message' => 'Vous devez être connecté pour liker une image'], 403);
+		}
+
+		if ($picture->isLikedByUser($user)) {
+			$like = $likeRepository->findOneBy([
+				'picture' => $picture,
+				'user' => $user
+			]);
+
+
+			$entityManager->remove($like);
+			$entityManager->flush();
+			return $this->json([
+				'message' => 'Like supprimé',
+				'likes' => $likeRepository->count([
+					'picture' => $picture
+				])
+			], 200);
+		}
+
+		$like = new PictureLike();
+		$like->setPicture($picture);
+		$like->setUser($user);
+
+		$entityManager->persist($like);
+		$entityManager->flush();
+
+		return $this->json([
+			'message' => 'Like ajouté',
+			'likes' => $likeRepository->count([
+				'picture' => $picture
+			])
+		], 200);
 	}
 }

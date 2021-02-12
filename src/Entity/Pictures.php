@@ -67,9 +67,15 @@ class Pictures
      */
     private $pictureLikes;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Commentaire::class, mappedBy="picture", orphanRemoval=true)
+     */
+    private $commentaires;
+
     public function __construct()
     {
         $this->pictureLikes = new ArrayCollection();
+        $this->commentaires = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -218,5 +224,36 @@ class Pictures
             }
         }
         return false;
+    }
+
+    /**
+     * @return Collection|Commentaire[]
+     */
+    public function getCommentaires(): Collection
+    {
+        return $this->commentaires;
+    }
+
+    public function addCommentaire(Commentaire $commentaire): self
+    {
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires[] = $commentaire;
+            $commentaire->setPicture($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaire(Commentaire $commentaire): self
+    {
+        if ($this->commentaires->contains($commentaire)) {
+            $this->commentaires->removeElement($commentaire);
+            // set the owning side to null (unless already changed)
+            if ($commentaire->getPicture() === $this) {
+                $commentaire->setPicture(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -5,13 +5,15 @@ namespace App\Controller\Profil;
 
 
 use App\Entity\Pictures;
+use App\Entity\Commentaire;
 use App\Entity\PictureLike;
-use App\Repository\UserRepository;
 //use App\Form
 
+use App\Repository\UserRepository;
 use APP\Controller\SecurityController;
 use App\Repository\PicturesRepository;
 use Doctrine\Persistence\ObjectManager;
+use App\Repository\CommentaireRepository;
 use App\Repository\PictureLikeRepository;
 use App\Controller\Admin\PictureController;
 use Symfony\Component\HttpFoundation\Request;
@@ -186,7 +188,8 @@ class PicturesController extends AbstractController
 	 */
 	public function like(Pictures $picture, PictureLikeRepository $likeRepository): Response
 	{
-		$user = $this->getUser();
+		$user = $this->security->getUser();
+		//$user = $this->getUser();
 		$entityManager = $this->getDoctrine()->getManager();
 		if (!$user) {
 			return $this->json(['message' => 'Vous devez être connecté pour liker une image'], 403);
@@ -221,6 +224,42 @@ class PicturesController extends AbstractController
 			'likes' => $likeRepository->count([
 				'picture' => $picture
 			])
+		], 200);
+	}
+
+	/**
+	 * Ajoute un commentaire à une image
+	 * 
+	 * @Route("/picture/{id}/addComment", name="picture_addComment")
+	 *
+	 * @param Pictures $picture
+	 * @param Commentaire $commentaire
+	 * @param CommentaireRepository $commentaireRepository
+	 * @return Response
+	 */
+	public function addComment(Request $request, Pictures $picture): Response
+	{
+		$data = $request->getContent();
+		$data = json_decode($data, true);
+
+		$user = $this->security->getUser();
+		$entityManager = $this->getDoctrine()->getManager();
+		$commentaire = new Commentaire;
+		$commentaire->setPicture($picture);
+		$commentaire->setContent($data['comment']);
+		$commentaire->setUser($user);
+
+		//dd($commentaire->getDate()->format('d-m-Y'));
+		if (!$user) {
+			return $this->json(['message' => 'Vous devez être connecté pour commenter une image'], 403);
+		}
+		$entityManager->persist($commentaire);
+		$entityManager->flush();
+		return $this->json([
+			'message' => 'Commentaire ajouté avec succés',
+			'commentaire' => $commentaire->getContent(),
+			'username' => $user->getUsername(),
+			'date' => $commentaire->getDate()->format('d-m-Y')
 		], 200);
 	}
 }

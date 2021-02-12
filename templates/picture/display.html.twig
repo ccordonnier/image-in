@@ -1,0 +1,179 @@
+{% extends 'base_no_header.html.twig' %}
+{% block stylesheets %}
+<style>
+    #picture-header {
+        display: flex;
+        align-items: center;
+    }
+
+    #picture-header img {
+        width: 60px;
+        margin-right: 20px;
+    }
+
+    #picture-header img {
+        flex-grow: 1;
+    }
+
+    #picture-header .picture-user-informations {
+        flex-grow: 100;
+    }
+
+    #picture-header a {
+        flex-grow: 1;
+    }
+
+    ul.collection {
+        margin-top: 103px;
+        max-height: 625px;
+        overflow: auto;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col s9">
+
+            <div class="section valign-wrapper" id="picture-header">
+
+                <img src="{{asset('images/users/'~ picture.user.id ~ '/profil.jpg')}}" alt="" class="circle">
+                <div class="picture-user-informations">
+                    <span><b>{{picture.title}}</b></span>
+                    <br>
+                    <span>{{picture.user.username}}</span>
+                </div>
+                <a class="waves-effect waves-light btn js-like {% if app.user and picture.isLikedByUser(app.user) %} red {% else %} grey lighten-1 {% endif %}"
+                    href="{{path('picture_like', {'id': picture.id})}}"><i class="material-icons left">
+                        favorite
+                    </i>{{ picture.pictureLikes | length }} Like</a>
+
+            </div>
+
+            <div class="card">
+
+                <div class="card-image">
+
+                    <img src="{{asset('images/users/'~ picture.user.id ~ '/' ~ picture.name )}}">
+                    <span class="jaimes"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col s3">
+            <ul class="collection ">
+                {% if app.user %}
+                <li class="collection-item avatar" id="user-item">
+                    <img src="{{asset('images/users/'~ app.user.id ~ '/profil.jpg')}}" alt="" class="circle">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <textarea id="textarea2" class="materialize-textarea"></textarea>
+                            <label for="textarea2">Donnez votre avis !
+                            </label>
+                            
+                            <a id="commenter" class="btn" href="{{path('picture_addComment', {'id': picture.id})}}" data-picture_id="{{ picture.id }}" >Commenter</a>
+                        </div>
+                    </div>
+
+                </li>
+                {% else %}
+                <li class="collection-item avatar">
+                    Vous devez être connecté pour laisser un commentaire
+                    <a href="{{path('security_login')}}" class="btn">Connexion</a>
+                </li>
+                {% endif %}
+                {% for commentaire in picture.commentaires|reverse %}
+                <li class="collection-item avatar">
+                    <img src="{{asset('images/users/' ~ commentaire.user.id ~ '/profil.jpg')}}" alt="" class="circle">
+                    <span class="title">{{commentaire.user.username}}</span>
+                    <br><span>le {{commentaire.date|date('d-m-Y')}}</span>
+                    <p>{{commentaire.content}}</p>
+
+                </li>
+                {% endfor %}
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+
+{% block javascripts %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+
+    function onClickBtnLike(e) {
+        e.preventDefault();
+
+        const url = this.href;
+        const spanLikes = this.parentElement.querySelector('.jaimes');
+        const icon = this.querySelector('.material-icons');
+        axios.get(url).then(function (response) {
+
+            spanLikes.textContent = response.data.likes;
+
+            if (icon.classList.contains('red')) {
+                icon.classList.remove('red')
+                icon.classList.add('grey', 'lighten-1');
+            } else {
+                icon.classList.remove('grey', 'lighten-1')
+                icon.classList.add('red');
+            }
+        }).catch(function (error) {
+            if (error.response.status === 403) {
+                M.toast({ html: 'Vous devez être connecter pour aimer une image <a class="btn-flat toast-action" href=\'{{path("security_login")}}\'>Connexion</a>', displayLength: 7000 });
+            } else {
+                M.toast({ html: 'Une erreur s\'est produite, veuillez réessayer', displayLength: 7000 });
+            }
+        });
+    }
+
+    function addComment(e) {
+        e.preventDefault();
+
+        const url = this.href;
+        const comment = document.querySelector('#textarea2').value;
+        const picture_id = this.dataset.picture_id;
+        axios.post(url,
+        {   
+            picture_id: picture_id,
+            comment: comment
+
+        }).then(function (response) {
+
+            
+            var userItem = document.getElementById('user-item')
+            var imgSrc = userItem.querySelector('img').src;
+            var newItem = document.createElement('li');
+            newItem.classList.add('collection-item','avatar')
+           console.log(response.data)
+            var contentItem = '<img src="'+imgSrc+'" alt="" class="circle"><span class="title">'+response.data.username+'</span><br><span>le '+response.data.date+'</span><p>'+response.data.commentaire+'</p>';
+            newItem.innerHTML = contentItem;
+            userItem.after(newItem);
+            
+
+        }).catch(function (error) {
+            console.log(error);
+
+            if (error.response.status === 403) {
+                M.toast({ html: 'Vous devez être connecter pour laisser un commentaire <a class="btn-flat toast-action" href=\'{{path("security_login")}}\'>Connexion</a>', displayLength: 7000 });
+            } else {
+                M.toast({ html: 'Une erreur s\'est produite, veuillez réessayer', displayLength: 7000 });
+            }
+
+        });
+
+    }
+
+    document.querySelectorAll('a.js-like').forEach(function (link) {
+        link.addEventListener('click', onClickBtnLike);
+        
+    });
+
+    document.querySelector('#commenter').addEventListener('click', addComment);
+
+</script>
+{% endblock %}

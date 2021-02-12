@@ -24,6 +24,5 @@ class PictureController extends AbstractController{
 		$pictures = $this->repository->findAll();
 		return $this->render('admin/pictures/index.html.twig');
 	}
-}
 
-?>
+}

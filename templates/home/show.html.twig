@@ -12,7 +12,7 @@
       						<div class="card">
 								<a href="{{path('picture_show',{'id':picture.id})}}">
         						  <div class="card-image">
-          							<img src="images/users/{{ picture.user.id }}/{{ picture.name }}">
+          							<img src="{{asset('images/users/' ~ picture.user.id ~ '/' ~ picture.name )|imagine_filter('my_by_down_scale_filter')}}">
           							<a href="{{path('picture_like', {'id': picture.id})}}" class="js-like btn-floating halfway-fab waves-effect waves-light {% if app.user and picture.isLikedByUser(app.user) %} red {% else %} grey lighten-1 {% endif %}">
 										<i class="material-icons ">
 											  favorite

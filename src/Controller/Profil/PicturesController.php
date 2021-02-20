@@ -104,8 +104,6 @@ class PicturesController extends AbstractController
 	 */
 	public function add(Request $request, SluggerInterface $slugger)
 	{
-
-		//$picture = new Pictures();
 		$picture = new Pictures;
 		$user = $this->security->getUser();
 
@@ -135,7 +133,6 @@ class PicturesController extends AbstractController
 			if ($form->isSubmitted() && $form->isValid()) {
 
 				$file = $request->files->get('form')['name'];
-				//dd($file);
 				$basename = $file->getBasename();
 				$originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
 
@@ -189,7 +186,6 @@ class PicturesController extends AbstractController
 	public function like(Pictures $picture, PictureLikeRepository $likeRepository): Response
 	{
 		$user = $this->security->getUser();
-		//$user = $this->getUser();
 		$entityManager = $this->getDoctrine()->getManager();
 		if (!$user) {
 			return $this->json(['message' => 'Vous devez être connecté pour liker une image'], 403);
@@ -249,7 +245,6 @@ class PicturesController extends AbstractController
 		$commentaire->setContent($data['comment']);
 		$commentaire->setUser($user);
 
-		//dd($commentaire->getDate()->format('d-m-Y'));
 		if (!$user) {
 			return $this->json(['message' => 'Vous devez être connecté pour commenter une image'], 403);
 		}

@@ -78,6 +78,22 @@
     "doctrine/sql-formatter": {
         "version": "1.1.0"
     },
+    "imagine/imagine": {
+        "version": "1.2.4"
+    },
+    "liip/imagine-bundle": {
+        "version": "1.8",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.8",
+            "ref": "5a5bdc2d0e2533ed6935d5ae562f2b318a8fc1ee"
+        },
+        "files": [
+            "./config/packages/liip_imagine.yaml",
+            "./config/routes/liip_imagine.yaml"
+        ]
+    },
     "monolog/monolog": {
         "version": "2.1.0"
     },
@@ -315,6 +331,9 @@
     },
     "symfony/polyfill-php80": {
         "version": "v1.17.0"
+    },
+    "symfony/process": {
+        "version": "v5.1.11"
     },
     "symfony/profiler-pack": {
         "version": "v1.0.4"
